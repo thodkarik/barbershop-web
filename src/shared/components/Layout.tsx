@@ -1,6 +1,15 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useAuth } from "../../features/auth/AuthContext";
 
 export default function Layout() {
+    const auth = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        auth.logout();
+        navigate("/login");
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="border-b bg-white">
@@ -9,12 +18,29 @@ export default function Layout() {
                         BarberShop
                     </Link>
 
-                    <nav className="flex gap-4 text-sm">
-                        <Link to="/" className="hover:underline">Services</Link>
-                        <Link to="/appointments/book" className="hover:underline">Book</Link>
-                        <Link to="/appointments/me" className="hover:underline">My Appointments</Link>
-                        <Link to="/login" className="hover:underline">Login</Link>
-                        <Link to="/register" className="hover:underline">Register</Link>
+                    <nav className="flex items-center gap-4 text-sm">
+                        <Link to="/">Services</Link>
+
+                        {auth.isAuthenticated && (
+                            <>
+                                <Link to="/appointments/book">Book</Link>
+                                <Link to="/appointments/me">My Appointments</Link>
+                            </>
+                        )}
+
+                        {!auth.isAuthenticated ? (
+                            <>
+                                <Link to="/login">Login</Link>
+                                <Link to="/register">Register</Link>
+                            </>
+                        ) : (
+                            <button
+                                onClick={handleLogout}
+                                className="font-medium text-red-600 hover:underline"
+                            >
+                                Logout
+                            </button>
+                        )}
                     </nav>
                 </div>
             </header>
@@ -25,3 +51,4 @@ export default function Layout() {
         </div>
     );
 }
+
