@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import {login} from "./authApi.ts";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -11,16 +12,21 @@ const LoginPage = () => {
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = (e: React.SyntheticEvent) => {
+    const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         setError(null);
         setIsSubmitting(true);
 
         try {
-            auth.login("demo-token");
+            const result = await login({
+                username: email,
+                password,
+            });
+
+            auth.login(result.token);
             navigate("/appointments/me");
         } catch {
-            setError("Login failed.");
+            setError("Invalid email or password");
         } finally {
             setIsSubmitting(false);
         }
@@ -38,12 +44,13 @@ const LoginPage = () => {
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
                 <div>
-                    <label className="text-sm font-medium">Email</label>
+                    <label className="text-sm font-medium">Username</label>
                     <input
-                        type="email"
+                        type="text"
                         className="mt-1 w-full rounded-lg border px-3 py-2"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        autoComplete="username"
                         required
                     />
                 </div>
