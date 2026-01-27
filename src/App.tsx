@@ -1,12 +1,35 @@
-export default function App() {
-    return (
-        <div className="min-h-screen p-6 font-sans">
-            <h1 className="text-3xl font-bold">BarberShop</h1>
-            <p className="mt-2 text-gray-600">Tailwind is wired up ✅</p>
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Layout from "./shared/components/Layout";
+import ProtectedRoute from "./features/auth/ProtectedRoute";
 
-            <button className="mt-6 rounded-lg bg-black px-4 py-2 text-white hover:opacity-90">
-                Test button
-            </button>
-        </div>
+import LoginPage from "./features/auth/LoginPage";
+import RegisterPage from "./features/auth/RegisterPage";
+import ServicesPage from "./features/services/ServicesPage";
+import BookAppointmentPage from "./features/appointments/BookAppointmentPage";
+import MyAppointmentsPage from "./features/appointments/MyAppointmentsPage";
+
+
+function App() {
+    return (
+        <>
+            <BrowserRouter>
+                <Routes>
+                    <Route element={<Layout />}>
+                        <Route index element={<ServicesPage />} />
+                        <Route path="login" element={<LoginPage />} />
+                        <Route path="register" element={<RegisterPage />} />
+
+                        {/* protected section (σαν το products παράδειγμα) */}
+                        <Route path="appointments" element={<ProtectedRoute />}>
+                            <Route path="book" element={<BookAppointmentPage />} />
+                            <Route path="me" element={<MyAppointmentsPage />} />
+                        </Route>
+                    </Route>
+                </Routes>
+            </BrowserRouter>
+        </>
     );
 }
+
+export default App;
+
