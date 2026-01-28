@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { getMyAppointments, type MyAppointmentDto } from "./appointmentsApi";
 
+import Alert from "../../shared/components/ui/Alert";
+
 const MyAppointmentsPage = () => {
     const [items, setItems] = useState<MyAppointmentDto[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -35,24 +37,31 @@ const MyAppointmentsPage = () => {
         return d.toLocaleString();
     };
 
+    const statusBadge = (status: string) => {
+        // no fancy colors, just subtle background differences
+        const base = "rounded-full bg-gray-100 px-3 py-1 text-xs";
+        return <span className={base}>{status}</span>;
+    };
+
     if (isLoading) {
         return <p>Loading appointments...</p>;
     }
 
     if (error) {
-        return (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
-                {error}
-            </div>
-        );
+        return <Alert variant="error">{error}</Alert>;
     }
 
     return (
         <div>
             <h1 className="text-2xl font-bold">My Appointments</h1>
+            <p className="mt-1 text-sm text-gray-600">
+                Your upcoming and past appointments.
+            </p>
 
             {items.length === 0 ? (
-                <p className="mt-4 text-sm text-gray-600">No appointments yet.</p>
+                <div className="mt-6">
+                    <Alert>No appointments yet.</Alert>
+                </div>
             ) : (
                 <div className="mt-6 space-y-3">
                     {items.map((a) => (
@@ -63,12 +72,10 @@ const MyAppointmentsPage = () => {
                                     <p className="font-medium">{formatDateTime(a.appointmentDateTime)}</p>
                                 </div>
 
-                                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs">
-                  {a.status}
-                </span>
+                                {statusBadge(a.status)}
                             </div>
 
-                            <div className="mt-3 grid gap-2 text-sm">
+                            <div className="mt-4 grid gap-2 text-sm">
                                 <p>
                                     <span className="text-gray-600">Barber:</span>{" "}
                                     <span className="font-medium">{a.barberName}</span>
@@ -87,4 +94,5 @@ const MyAppointmentsPage = () => {
 };
 
 export default MyAppointmentsPage;
+
 

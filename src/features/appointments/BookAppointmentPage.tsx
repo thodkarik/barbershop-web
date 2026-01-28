@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { getServices, type ServiceDto } from "../services/servicesApi";
 import { getBarbers, type BarberDto } from "../barbers/barbersApi";
 import { getAvailability, type AvailabilitySlotDto } from "./availabilityApi";
 import { createAppointment } from "./appointmentsApi";
+
+import Button from "../../shared/components/ui/Button";
+import Select from "../../shared/components/ui/Select";
+import TextInput from "../../shared/components/ui/TextInput";
+import Alert from "../../shared/components/ui/Alert";
 
 const BookAppointmentPage = () => {
     const navigate = useNavigate();
@@ -13,10 +19,10 @@ const BookAppointmentPage = () => {
 
     const [serviceId, setServiceId] = useState<number | "">("");
     const [barberId, setBarberId] = useState<number | "">("");
-    const [date, setDate] = useState(""); // YYYY-MM-DD
+    const [date, setDate] = useState("");
 
     const [slots, setSlots] = useState<AvailabilitySlotDto[]>([]);
-    const [selectedStart, setSelectedStart] = useState(""); // ISO datetime (slot.start)
+    const [selectedStart, setSelectedStart] = useState("");
 
     const [isLoadingSlots, setIsLoadingSlots] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -111,102 +117,80 @@ const BookAppointmentPage = () => {
         }
     };
 
-    const formatTime = (iso: string) => iso.slice(11, 16); // "HH:mm"
+    const barberOptions = barbers.map((b) => ({ value: b.id, label: b.fullName }));
+    const serviceOptions = services.map((s) => ({ value: s.id, label: s.name }));
+
+    const timeOptions = slots.map((s) => ({
+        value: s.start,
+        label: `${s.start.slice(11, 16)} - ${s.end.slice(11, 16)}`,
+    }));
 
     return (
         <div className="mx-auto max-w-md rounded-xl bg-white p-6 shadow">
             <h1 className="text-2xl font-bold">Book Appointment</h1>
+            <p className="mt-1 text-sm text-gray-600">
+                Select barber, service and an available time slot.
+            </p>
 
             {error && (
-                <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
-                    {error}
+                <div className="mt-4">
+                    <Alert variant="error">{error}</Alert>
                 </div>
             )}
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-                <div>
-                    <label className="text-sm font-medium">Barber</label>
-                    <select
-                        className="mt-1 w-full rounded-lg border px-3 py-2"
-                        value={barberId}
-                        onChange={(e) => setBarberId(e.target.value ? Number(e.target.value) : "")}
-                        required
-                    >
-                        <option value="">Select barber</option>
-                        {barbers.map((b) => (
-                            <option key={b.id} value={b.id}>
-                                {b.fullName}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <Select
+                    label="Barber"
+                    value={barberId}
+                    onChange={(e) => setBarberId(e.target.value ? Number(e.target.value) : "")}
+                    options={barberOptions}
+                    placeholder="Select barber"
+                    required
+                />
 
-                <div>
-                    <label className="text-sm font-medium">Service</label>
-                    <select
-                        className="mt-1 w-full rounded-lg border px-3 py-2"
-                        value={serviceId}
-                        onChange={(e) => setServiceId(e.target.value ? Number(e.target.value) : "")}
-                        required
-                    >
-                        <option value="">Select service</option>
-                        {services.map((s) => (
-                            <option key={s.id} value={s.id}>
-                                {s.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                <Select
+                    label="Service"
+                    value={serviceId}
+                    onChange={(e) => setServiceId(e.target.value ? Number(e.target.value) : "")}
+                    options={serviceOptions}
+                    placeholder="Select service"
+                    required
+                />
 
-                <div>
-                    <label className="text-sm font-medium">Date</label>
-                    <input
-                        type="date"
-                        min={new Date().toISOString().slice(0, 10)}
-                        className="mt-1 w-full rounded-lg border px-3 py-2"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                        required
-                    />
-                </div>
+                <TextInput
+                    label="Date"
+                    type="date"
+                    min={new Date().toISOString().slice(0, 10)}
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    required
+                />
 
-                <div>
-                    <label className="text-sm font-medium">Time</label>
-                    <select
-                        className="mt-1 w-full rounded-lg border px-3 py-2"
-                        value={selectedStart}
-                        onChange={(e) => setSelectedStart(e.target.value)}
-                        required
-                        disabled={isLoadingSlots || slots.length === 0}
-                    >
-                        <option value="">
-                            {isLoadingSlots
-                                ? "Loading available slots..."
-                                : slots.length === 0
-                                    ? "No slots available"
-                                    : "Select time"}
-                        </option>
+                <Select
+                    label="Time"
+                    value={selectedStart}
+                    onChange={(e) => setSelectedStart(e.target.value)}
+                    options={timeOptions}
+                    placeholder={
+                        isLoadingSlots
+                            ? "Loading available slots..."
+                            : slots.length === 0
+                                ? "No slots available"
+                                : "Select time"
+                    }
+                    disabled={isLoadingSlots || slots.length === 0}
+                    required
+                />
 
-                        {slots.map((s) => (
-                            <option key={s.start} value={s.start}>
-                                {formatTime(s.start)} - {formatTime(s.end)}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full rounded-lg bg-black py-2 text-white disabled:opacity-60"
-                >
+                <Button type="submit" disabled={isSubmitting} className="w-full">
                     {isSubmitting ? "Booking..." : "Book appointment"}
-                </button>
+                </Button>
             </form>
         </div>
     );
 };
 
 export default BookAppointmentPage;
+
 
 

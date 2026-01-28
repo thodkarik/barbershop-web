@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { getServices, type ServiceDto } from "./servicesApi";
 
+import Alert from "../../shared/components/ui/Alert";
+
 const ServicesPage = () => {
     const [services, setServices] = useState<ServiceDto[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -15,10 +17,11 @@ const ServicesPage = () => {
                 const data = await getServices();
                 setServices(data);
             } catch (err: any) {
+                const data = err?.response?.data;
                 const msg =
-                    err?.response?.data?.message ||
-                    err?.response?.data?.title ||
-                    (typeof err?.response?.data === "string" ? err.response.data : null) ||
+                    data?.message ||
+                    data?.title ||
+                    (typeof data === "string" ? data : null) ||
                     "Failed to load services";
                 setError(msg);
             } finally {
@@ -34,40 +37,39 @@ const ServicesPage = () => {
     }
 
     if (error) {
-        return (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
-                {error}
-            </div>
-        );
+        return <Alert variant="error">{error}</Alert>;
     }
 
     return (
         <div>
             <h1 className="text-2xl font-bold">Services</h1>
             <p className="mt-1 text-sm text-gray-600">
-                Choose a service to book an appointment.
+                Browse our services and book your appointment.
             </p>
 
             {services.length === 0 ? (
-                <p className="mt-6 text-sm text-gray-600">No services available.</p>
+                <div className="mt-6">
+                    <Alert>No services available.</Alert>
+                </div>
             ) : (
                 <div className="mt-6 grid gap-4 sm:grid-cols-2">
                     {services.map((s) => (
                         <div key={s.id} className="rounded-xl bg-white p-5 shadow">
                             <div className="flex items-start justify-between gap-3">
-                                <h2 className="text-lg font-semibold">{s.name}</h2>
+                                <div>
+                                    <h2 className="text-lg font-semibold">{s.name}</h2>
+                                    <p className="mt-1 text-sm text-gray-600">{s.description}</p>
+                                </div>
+
                                 <span className="rounded-full bg-gray-100 px-3 py-1 text-xs">
-                                    {s.durationMinutes} min
-                                </span>
+                  {s.durationMinutes} min
+                </span>
                             </div>
 
-                            <p className="mt-2 text-sm text-gray-600">
-                                {s.description}
-                            </p>
-
-                            <p className="mt-3 text-sm text-gray-700">
-                                Price: <span className="font-medium">{s.price}€</span>
-                            </p>
+                            <div className="mt-4 flex items-center justify-between text-sm">
+                                <p className="text-gray-600">Price</p>
+                                <p className="font-medium">{s.price}€</p>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -77,3 +79,4 @@ const ServicesPage = () => {
 };
 
 export default ServicesPage;
+

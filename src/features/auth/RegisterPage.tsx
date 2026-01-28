@@ -1,16 +1,20 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { register } from "./authApi.ts"
+import { register } from "./authApi";
+
+import Button from "../../shared/components/ui/Button";
+import TextInput from "../../shared/components/ui/TextInput";
+import Alert from "../../shared/components/ui/Alert";
 
 const RegisterPage = () => {
     const navigate = useNavigate();
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,22 +28,22 @@ const RegisterPage = () => {
             await register({
                 firstName,
                 lastName,
+                phoneNumber,
                 username,
                 email,
-                phoneNumber,
                 password,
             });
 
             navigate("/login");
         } catch (err: any) {
             const data = err?.response?.data;
-
-            if (data?.errors) {
-                const messages = Object.values(data.errors).flat().join(", ");
-                setError(messages);
-            } else {
-                setError(data?.message || data?.title || "Registration failed");
-            }
+            const msg =
+                data?.message ||
+                data?.title ||
+                (data?.errors ? Object.values(data.errors).flat().join(", ") : null) ||
+                (typeof data === "string" ? data : null) ||
+                "Registration failed";
+            setError(msg);
         } finally {
             setIsSubmitting(false);
         }
@@ -48,97 +52,77 @@ const RegisterPage = () => {
     return (
         <div className="mx-auto max-w-md rounded-xl bg-white p-6 shadow">
             <h1 className="text-2xl font-bold">Register</h1>
+            <p className="mt-1 text-sm text-gray-600">Create a new customer account.</p>
 
             {error && (
-                <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
-                    {error}
+                <div className="mt-4">
+                    <Alert variant="error">{error}</Alert>
                 </div>
             )}
 
             <form onSubmit={handleSubmit} className="mt-6 space-y-4">
                 <div className="grid grid-cols-2 gap-3">
-                    <div>
-                        <label className="text-sm font-medium">First name</label>
-                        <input
-                            className="mt-1 w-full rounded-lg border px-3 py-2"
-                            value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="text-sm font-medium">Last name</label>
-                        <input
-                            className="mt-1 w-full rounded-lg border px-3 py-2"
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                            required
-                        />
-                    </div>
-                </div>
-
-                <div>
-                    <label className="text-sm font-medium">Phone number</label>
-                    <input
-                        className="mt-1 w-full rounded-lg border px-3 py-2"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        autoComplete="tel"
+                    <TextInput
+                        label="First name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        required
+                    />
+                    <TextInput
+                        label="Last name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                         required
                     />
                 </div>
 
-                <div>
-                    <label className="text-sm font-medium">Email</label>
-                    <input
-                        type="email"
-                        className="mt-1 w-full rounded-lg border px-3 py-2"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        autoComplete="email"
-                        required
-                    />
-                </div>
+                <TextInput
+                    label="Phone number"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    autoComplete="tel"
+                    required
+                />
+
+                <TextInput
+                    label="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    autoComplete="username"
+                    required
+                />
+
+                <TextInput
+                    label="Email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    autoComplete="email"
+                    required
+                />
 
                 <div>
-                    <label className="text-sm font-medium">Username</label>
-                    <input
-                        className="mt-1 w-full rounded-lg border px-3 py-2"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        autoComplete="username"
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label className="text-sm font-medium">Password</label>
-                    <input
+                    <TextInput
+                        label="Password"
                         type="password"
-                        className="mt-1 w-full rounded-lg border px-3 py-2"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         autoComplete="new-password"
                         required
                     />
+                    <p className="mt-1 text-xs text-gray-600">
+                        Password must include uppercase, lowercase, number and special character.
+                    </p>
                 </div>
-                <p className="mt-1 text-xs text-gray-600">
-                    Password must include uppercase, lowercase, number and special character.
-                </p>
 
-                <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full rounded-lg bg-black py-2 text-white disabled:opacity-60"
-                >
+                <Button type="submit" disabled={isSubmitting} className="w-full">
                     {isSubmitting ? "Creating account..." : "Create account"}
-                </button>
+                </Button>
             </form>
 
-            <p className="mt-4 text-sm">
+            <p className="mt-4 text-sm text-gray-600">
                 Already have an account?{" "}
-                <Link to="/login" className="font-medium underline">
+                <Link to="/login" className="font-medium text-black hover:underline">
                     Login
                 </Link>
             </p>
@@ -147,4 +131,5 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
+
 
