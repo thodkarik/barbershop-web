@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { login } from "./authApi";
+import { getRoleFromToken } from "../../shared/utils/jwt";
+
 
 import Button from "../../shared/components/ui/Button";
 import TextInput from "../../shared/components/ui/TextInput";
@@ -25,7 +27,15 @@ const LoginPage = () => {
         try {
             const result = await login({ username, password });
             auth.login(result.token);
-            navigate("/appointments/me");
+            const role = getRoleFromToken(result.token);
+
+            if (role === "Barber") {
+                navigate("/barber/appointments");
+            } else if (role === "Receptionist") {
+                navigate("/receptionist/appointments");
+            } else {
+                navigate("/appointments/me");
+            }
         } catch (err: any) {
             const data = err?.response?.data;
             const msg =

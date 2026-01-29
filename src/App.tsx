@@ -8,6 +8,7 @@ import RegisterPage from "./features/auth/RegisterPage";
 import ServicesPage from "./features/services/ServicesPage";
 import BookAppointmentPage from "./features/appointments/BookAppointmentPage";
 import MyAppointmentsPage from "./features/appointments/MyAppointmentsPage";
+import BarberAppointmentsPage from "./features/appointments/BarberAppointmentsPage.tsx";
 
 function App() {
     return (
@@ -19,6 +20,9 @@ function App() {
                             <Route index element={<ServicesPage />} />
                             <Route path="login" element={<LoginPage />} />
                             <Route path="register" element={<RegisterPage />} />
+                            <Route path="barber" element={<ProtectedRoute />}>
+                                <Route path="appointments" element={<BarberAppointmentsPage />} />
+                            </Route>
 
                             <Route path="appointments" element={<ProtectedRoute />}>
                                 <Route path="book" element={<BookAppointmentPage />} />
