@@ -2,6 +2,20 @@ import { useEffect, useState } from "react";
 import Alert from "../../shared/components/ui/Alert";
 import { getBarberAppointments, type BarberAppointmentDto } from "./barberAppointmentsApi";
 
+const statusBadgeClass = (status: string) => {
+    switch (status) {
+        case "Completed":
+            return "bg-green-100 text-green-800";
+        case "Canceled":
+            return "bg-red-100 text-red-800";
+        case "NoShow":
+            return "bg-orange-100 text-orange-800";
+        default:
+            return "bg-gray-100 text-gray-800";
+    }
+};
+
+
 const BarberAppointmentsPage = () => {
     const [items, setItems] = useState<BarberAppointmentDto[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -54,9 +68,14 @@ const BarberAppointmentsPage = () => {
                                     <p className="text-sm text-gray-600">Date & time</p>
                                     <p className="font-medium">{formatDateTime(a.appointmentDateTime)}</p>
                                 </div>
-                                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs">
-                  {a.status}
-                </span>
+
+                                <span
+                                    className={`rounded-full px-3 py-1 text-xs font-medium ${statusBadgeClass(
+                                        a.status
+                                    )}`}
+                                >
+                                    {a.status}
+                                </span>
                             </div>
 
                             <div className="mt-4 grid gap-2 text-sm">
