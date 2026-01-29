@@ -16,6 +16,19 @@ const STATUS_OPTIONS: SelectOption[] = [
     { value: "NoShow", label: "NoShow" },
 ];
 
+const statusBadgeClass = (status: string) => {
+    switch (status) {
+        case "Completed":
+            return "bg-green-100 text-green-800";
+        case "Canceled":
+            return "bg-red-100 text-red-800";
+        case "NoShow":
+            return "bg-orange-100 text-orange-800";
+        default:
+            return "bg-gray-100 text-gray-800";
+    }
+};
+
 const ReceptionistAppointmentsPage = () => {
     const [items, setItems] = useState<ReceptionistAppointmentDto[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -97,6 +110,19 @@ const ReceptionistAppointmentsPage = () => {
                                     <p className="font-medium">
                                         {formatDate(a.start)} — {formatTime(a.start)} to {formatTime(a.end)}
                                     </p>
+                                    <div className="flex items-center gap-3">
+                                        <p className="font-medium">
+                                            {formatDate(a.start)} — {formatTime(a.start)} to {formatTime(a.end)}
+                                        </p>
+
+                                        <span
+                                            className={`rounded-full px-3 py-1 text-xs font-medium ${statusBadgeClass(
+                                                serverStatusById[a.appointmentId]
+                                            )}`}
+                                        >
+                                            {serverStatusById[a.appointmentId]}
+                                        </span>
+                                    </div>
 
                                     <div className="mt-3 grid gap-1 text-sm">
                                         <p>
@@ -127,6 +153,11 @@ const ReceptionistAppointmentsPage = () => {
                                         }
                                         options={STATUS_OPTIONS}
                                         showPlaceholder={false}
+                                        className={
+                                            hasChanges(a.appointmentId)
+                                                ? "border-orange-400 focus:ring-orange-300"
+                                                : ""
+                                        }
                                     />
                                     {hasChanges(a.appointmentId) && (
                                         <p className="mt-2 text-xs text-gray-600">Unsaved change</p>
