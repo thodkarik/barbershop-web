@@ -3,6 +3,20 @@ import { getMyAppointments, type MyAppointmentDto } from "./appointmentsApi";
 
 import Alert from "../../shared/components/ui/Alert";
 
+
+const statusBadgeClass = (status: string) => {
+    switch (status) {
+        case "Completed":
+            return "bg-green-100 text-green-800";
+        case "Canceled":
+            return "bg-red-100 text-red-800";
+        case "NoShow":
+            return "bg-orange-100 text-orange-800";
+        default:
+            return "bg-gray-100 text-gray-800";
+    }
+};
+
 const MyAppointmentsPage = () => {
     const [items, setItems] = useState<MyAppointmentDto[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -37,12 +51,6 @@ const MyAppointmentsPage = () => {
         return d.toLocaleString();
     };
 
-    const statusBadge = (status: string) => {
-        // no fancy colors, just subtle background differences
-        const base = "rounded-full bg-gray-100 px-3 py-1 text-xs";
-        return <span className={base}>{status}</span>;
-    };
-
     if (isLoading) {
         return <p>Loading appointments...</p>;
     }
@@ -72,9 +80,12 @@ const MyAppointmentsPage = () => {
                                     <p className="font-medium">{formatDateTime(a.appointmentDateTime)}</p>
                                 </div>
 
-                                {statusBadge(a.status)}
+                                <span
+                                    className={`rounded-full px-3 py-1 text-xs font-medium ${statusBadgeClass(a.status)}`}
+                                >
+                                    {a.status}
+                                </span>
                             </div>
-
                             <div className="mt-4 grid gap-2 text-sm">
                                 <p>
                                     <span className="text-gray-600">Barber:</span>{" "}
