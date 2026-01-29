@@ -9,6 +9,7 @@ import ServicesPage from "./features/services/ServicesPage";
 import BookAppointmentPage from "./features/appointments/BookAppointmentPage";
 import MyAppointmentsPage from "./features/appointments/MyAppointmentsPage";
 import BarberAppointmentsPage from "./features/appointments/BarberAppointmentsPage.tsx";
+import ReceptionistAppointmentsPage from "./features/receptionist/ReceptionistAppointmentsPage.tsx";
 
 function App() {
     return (
@@ -23,6 +24,10 @@ function App() {
                             <Route path="barber" element={<ProtectedRoute />}>
                                 <Route path="appointments" element={<BarberAppointmentsPage />} />
                             </Route>
+                            <Route path="receptionist" element={<ProtectedRoute />}>
+                                <Route path="appointments" element={<ReceptionistAppointmentsPage />} />
+                            </Route>
+
 
                             <Route path="appointments" element={<ProtectedRoute />}>
                                 <Route path="book" element={<BookAppointmentPage />} />
