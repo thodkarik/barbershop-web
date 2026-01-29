@@ -29,7 +29,9 @@ const LoginPage = () => {
             auth.login(result.token);
             const role = getRoleFromToken(result.token);
 
-            if (role === "Barber") {
+            if (role === "Admin") {
+                navigate("/admin/services");
+            } else if (role === "Barber") {
                 navigate("/barber/appointments");
             } else if (role === "Receptionist") {
                 navigate("/receptionist/appointments");
