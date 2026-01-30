@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getServices, type ServiceDto } from "./servicesApi";
+import { getServices, type ServiceDto } from "./api.services.ts";
 
 import Alert from "../../shared/components/ui/Alert";
 

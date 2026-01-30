@@ -1,5 +1,5 @@
 import api from "../../shared/api/axios";
-import type { ServiceDto } from "./servicesApi";
+import type { ServiceDto } from "./api.services.ts";
 
 export type UpsertServiceRequest = {
     name: string;

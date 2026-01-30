@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import { login } from "./authApi";
+import { login } from "./api.auth.ts";
 import { getRoleFromToken } from "../../shared/utils/jwt";
 
 

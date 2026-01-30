@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getServices, type ServiceDto } from "../services/servicesApi";
-import { getBarbers, type BarberDto } from "../barbers/barbersApi";
-import { getAvailability, type AvailabilitySlotDto } from "./availabilityApi";
-import { createAppointment } from "./appointmentsApi";
+import { getServices, type ServiceDto } from "../services/api.services.ts";
+import { getBarbers, type BarberDto } from "../barbers/api.barbers.ts";
+import { getAvailability, type AvailabilitySlotDto } from "./api.availability.ts";
+import { createAppointment } from "./api.appointments.ts";
 
 import Button from "../../shared/components/ui/Button";
 import Select from "../../shared/components/ui/Select";

@@ -4,8 +4,8 @@ import Button from "../../shared/components/ui/Button";
 import TextInput from "../../shared/components/ui/TextInput";
 import Select from "../../shared/components/ui/Select";
 
-import { getServices, type ServiceDto } from "./servicesApi";
-import { createService, updateService, deleteService, type UpsertServiceRequest } from "./servicesAdminApi";
+import { getServices, type ServiceDto } from "./api.services.ts";
+import { createService, updateService, deleteService, type UpsertServiceRequest } from "./api.servicesAdmin.ts";
 
 const emptyForm: UpsertServiceRequest = {
     name: "",

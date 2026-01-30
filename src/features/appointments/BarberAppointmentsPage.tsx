@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Alert from "../../shared/components/ui/Alert";
-import { getBarberAppointments, type BarberAppointmentDto } from "./barberAppointmentsApi";
+import { getBarberAppointments, type BarberAppointmentDto } from "./api.barberAppointments.ts";
 
 const statusBadgeClass = (status: string) => {
     switch (status) {

@@ -6,7 +6,7 @@ import {
     getReceptionistAppointments,
     type ReceptionistAppointmentDto,
     updateAppointmentStatus,
-} from "./receptionistApi";
+} from "./api.receptionist.ts";
 
 type AppointmentStatus = "Completed" | "Canceled" | "NoShow";
 

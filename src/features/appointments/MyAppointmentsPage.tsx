@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getMyAppointments, type MyAppointmentDto } from "./appointmentsApi";
+import { getMyAppointments, type MyAppointmentDto } from "./api.appointments.ts";
 
 import Alert from "../../shared/components/ui/Alert";
 

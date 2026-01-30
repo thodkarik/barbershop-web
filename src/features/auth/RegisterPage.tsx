@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { register } from "./authApi";
+import { register } from "./api.auth.ts";
 
 import Button from "../../shared/components/ui/Button";
 import TextInput from "../../shared/components/ui/TextInput";
