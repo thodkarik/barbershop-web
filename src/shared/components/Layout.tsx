@@ -34,7 +34,7 @@ export default function Layout() {
                                     to="/appointments/book"
                                     className="text-sm font-medium hover:underline"
                                 >
-                                    Book
+                                    Book Appointment
                                 </Link>
                                 <Link
                                     to="/appointments/me"
@@ -59,7 +59,7 @@ export default function Layout() {
                                 to="/receptionist/appointments"
                                 className="text-sm font-medium hover:underline"
                             >
-                                Receptionist
+                                Manage Bookings
                             </Link>
                         )}
 
@@ -68,15 +68,16 @@ export default function Layout() {
                                 to="/admin/services"
                                 className="text-sm font-medium hover:underline"
                             >
-                                Admin
+                                Manage Services
                             </Link>
                         )}
 
                         <div className="ml-2 flex items-center gap-3">
                             {auth.isAuthenticated && role && (
                                 <span className="rounded-full bg-gray-100 px-3 py-1 text-xs">
-                                    Logged in as: {role}
+                                    {role} Access
                                 </span>
+
                             )}
 
                             {auth.isAuthenticated ? (
