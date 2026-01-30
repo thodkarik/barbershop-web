@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getMyAppointments, type MyAppointmentDto } from "./api.appointments.ts";
 
 import Alert from "../../shared/components/ui/Alert";
+import {getErrorMessage} from "../../shared/utils/error.ts";
 
 
 const statusBadgeClass = (status: string) => {
@@ -30,14 +31,8 @@ const MyAppointmentsPage = () => {
             try {
                 const data = await getMyAppointments();
                 setItems(data);
-            } catch (err: any) {
-                const data = err?.response?.data;
-                const msg =
-                    data?.message ||
-                    data?.title ||
-                    (typeof data === "string" ? data : null) ||
-                    "Failed to load appointments";
-                setError(msg);
+            } catch (err: unknown) {
+                setError(getErrorMessage(err, "Failed to load appointments"));
             } finally {
                 setIsLoading(false);
             }

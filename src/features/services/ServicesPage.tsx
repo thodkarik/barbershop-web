@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getServices, type ServiceDto } from "./api.services.ts";
 
 import Alert from "../../shared/components/ui/Alert";
+import {getErrorMessage} from "../../shared/utils/error.ts";
 
 const ServicesPage = () => {
     const [services, setServices] = useState<ServiceDto[]>([]);
@@ -16,14 +17,8 @@ const ServicesPage = () => {
             try {
                 const data = await getServices();
                 setServices(data);
-            } catch (err: any) {
-                const data = err?.response?.data;
-                const msg =
-                    data?.message ||
-                    data?.title ||
-                    (typeof data === "string" ? data : null) ||
-                    "Failed to load services";
-                setError(msg);
+            } catch (err: unknown) {
+                setError(getErrorMessage(err, "Failed to load services"));
             } finally {
                 setIsLoading(false);
             }

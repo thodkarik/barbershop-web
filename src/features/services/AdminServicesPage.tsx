@@ -6,6 +6,7 @@ import Select from "../../shared/components/ui/Select";
 
 import { getServices, type ServiceDto } from "./api.services.ts";
 import { createService, updateService, deleteService, type UpsertServiceRequest } from "./api.servicesAdmin.ts";
+import {getErrorMessage} from "../../shared/utils/error.ts";
 
 const emptyForm: UpsertServiceRequest = {
     name: "",
@@ -72,16 +73,9 @@ const AdminServicesPage = () => {
                 await updateService(editingId, form);
             }
             await load();
-            startCreate(); // reset to create mode
-        } catch (err: any) {
-            const data = err?.response?.data;
-            const msg =
-                data?.message ||
-                data?.title ||
-                (data?.errors ? Object.values(data.errors).flat().join(", ") : null) ||
-                (typeof data === "string" ? data : null) ||
-                "Save failed";
-            setError(msg);
+            startCreate();
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, "Save failed"));
         } finally {
             setIsSaving(false);
         }
@@ -96,14 +90,8 @@ const AdminServicesPage = () => {
             await deleteService(id);
             await load();
             if (editingId === id) startCreate();
-        } catch (err: any) {
-            const data = err?.response?.data;
-            const msg =
-                data?.message ||
-                data?.title ||
-                (typeof data === "string" ? data : null) ||
-                "Delete failed";
-            setError(msg);
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, "Delete failed"));
         }
     };
 

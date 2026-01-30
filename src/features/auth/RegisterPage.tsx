@@ -5,6 +5,7 @@ import { register } from "./api.auth.ts";
 import Button from "../../shared/components/ui/Button";
 import TextInput from "../../shared/components/ui/TextInput";
 import Alert from "../../shared/components/ui/Alert";
+import {getErrorMessage} from "../../shared/utils/error.ts";
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -35,15 +36,8 @@ const RegisterPage = () => {
             });
 
             navigate("/login");
-        } catch (err: any) {
-            const data = err?.response?.data;
-            const msg =
-                data?.message ||
-                data?.title ||
-                (data?.errors ? Object.values(data.errors).flat().join(", ") : null) ||
-                (typeof data === "string" ? data : null) ||
-                "Registration failed";
-            setError(msg);
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, "Registration failed"));
         } finally {
             setIsSubmitting(false);
         }

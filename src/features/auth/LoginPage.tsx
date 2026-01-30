@@ -8,6 +8,7 @@ import { getRoleFromToken } from "../../shared/utils/jwt";
 import Button from "../../shared/components/ui/Button";
 import TextInput from "../../shared/components/ui/TextInput";
 import Alert from "../../shared/components/ui/Alert";
+import {getErrorMessage} from "../../shared/utils/error.ts";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -38,14 +39,8 @@ const LoginPage = () => {
             } else {
                 navigate("/appointments/me");
             }
-        } catch (err: any) {
-            const data = err?.response?.data;
-            const msg =
-                data?.message ||
-                data?.title ||
-                (typeof data === "string" ? data : null) ||
-                "Invalid username or password";
-            setError(msg);
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, "Invalid username or password"));
         } finally {
             setIsSubmitting(false);
         }
