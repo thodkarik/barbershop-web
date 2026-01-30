@@ -27,7 +27,7 @@ function App() {
                             {/* Customer */}
                             <Route
                                 path="appointments"
-                                element={<RoleRoute allowed={["Customer", "Admin"]} />}
+                                element={<RoleRoute allowed={["Customer"]} />}
                             >
                                 <Route path="book" element={<BookAppointmentPage />} />
                                 <Route path="me" element={<MyAppointmentsPage />} />
@@ -36,7 +36,7 @@ function App() {
                             {/* Barber */}
                             <Route
                                 path="barber"
-                                element={<RoleRoute allowed={["Barber", "Admin"]} />}
+                                element={<RoleRoute allowed={["Barber"]} />}
                             >
                                 <Route path="appointments" element={<BarberAppointmentsPage />} />
                             </Route>
