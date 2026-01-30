@@ -1,6 +1,6 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import {NavLink, Outlet, useNavigate} from "react-router-dom";
 import { useAuth } from "../../features/auth/AuthContext";
-import { getRoleFromToken } from "../../shared/utils/jwt";
+import { getRoleFromToken } from "../utils/jwt.ts";
 
 export default function Layout() {
     const auth = useAuth();
@@ -13,71 +13,68 @@ export default function Layout() {
         navigate("/login");
     };
 
+    const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+        isActive
+            ? "text-sm font-semibold text-black underline underline-offset-4"
+            : "text-sm font-medium text-gray-700 hover:text-black";
+
+
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="bg-white shadow">
                 <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
                     {/* Brand */}
-                    <Link to="/" className="text-lg font-bold">
+                    <NavLink to="/" className={navLinkClass}>
                         BarberShop
-                    </Link>
+                    </NavLink>
 
                     {/* Nav */}
-                    <nav className="flex items-center gap-4">
-                        <Link to="/" className="text-sm font-medium hover:underline">
-                            Services
-                        </Link>
+                    <nav className="flex items-center gap-6">
+                        {/* Navigation links */}
+                        <div className="flex items-center gap-5">
+                            <NavLink to="/" className={navLinkClass}>
+                                Services
+                            </NavLink>
 
-                        {auth.isAuthenticated && (role === "Customer") && (
-                            <>
-                                <Link
-                                    to="/appointments/book"
-                                    className="text-sm font-medium hover:underline"
-                                >
-                                    Book Appointment
-                                </Link>
-                                <Link
-                                    to="/appointments/me"
-                                    className="text-sm font-medium hover:underline"
-                                >
-                                    My Appointments
-                                </Link>
-                            </>
-                        )}
+                            {auth.isAuthenticated && role === "Customer" && (
+                                <>
+                                    <NavLink to="/appointments/book" className={navLinkClass}>
+                                        Book Appointment
+                                    </NavLink>
+                                    <NavLink to="/appointments/me" className={navLinkClass}>
+                                        My Appointments
+                                    </NavLink>
+                                </>
+                            )}
 
-                        {auth.isAuthenticated && (role === "Barber") && (
-                            <Link
-                                to="/barber/appointments"
-                                className="text-sm font-medium hover:underline"
-                            >
-                                My Schedule
-                            </Link>
-                        )}
+                            {auth.isAuthenticated && role === "Barber" && (
+                                <NavLink to="/barber/appointments" className={navLinkClass}>
+                                    My Schedule
+                                </NavLink>
+                            )}
 
-                        {auth.isAuthenticated && (role === "Receptionist" || role === "Admin") && (
-                            <Link
-                                to="/receptionist/appointments"
-                                className="text-sm font-medium hover:underline"
-                            >
-                                Manage Bookings
-                            </Link>
-                        )}
+                            {auth.isAuthenticated && (role === "Receptionist" || role === "Admin") && (
+                                <NavLink to="/receptionist/appointments" className={navLinkClass}>
+                                    Manage Bookings
+                                </NavLink>
+                            )}
 
-                        {auth.isAuthenticated && role === "Admin" && (
-                            <Link
-                                to="/admin/services"
-                                className="text-sm font-medium hover:underline"
-                            >
-                                Manage Services
-                            </Link>
-                        )}
+                            {auth.isAuthenticated && role === "Admin" && (
+                                <NavLink to="/admin/services" className={navLinkClass}>
+                                    Manage Services
+                                </NavLink>
+                            )}
+                        </div>
 
-                        <div className="ml-2 flex items-center gap-3">
+                        {/* Divider */}
+                        <div className="h-6 w-px bg-gray-300" />
+
+                        {/* Auth actions */}
+                        <div className="flex items-center gap-3">
                             {auth.isAuthenticated && role && (
                                 <span className="rounded-full bg-gray-100 px-3 py-1 text-xs">
                                     {role} Access
                                 </span>
-
                             )}
 
                             {auth.isAuthenticated ? (
@@ -90,18 +87,18 @@ export default function Layout() {
                                 </button>
                             ) : (
                                 <>
-                                    <Link
+                                    <NavLink
                                         to="/login"
                                         className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:opacity-90"
                                     >
                                         Login
-                                    </Link>
-                                    <Link
+                                    </NavLink>
+                                    <NavLink
                                         to="/register"
                                         className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-100"
                                     >
                                         Register
-                                    </Link>
+                                    </NavLink>
                                 </>
                             )}
                         </div>
