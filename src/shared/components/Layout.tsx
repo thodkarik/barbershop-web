@@ -12,43 +12,49 @@ export default function Layout() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <header className="border-b bg-white">
-                <div className="mx-auto flex max-w-5xl items-center justify-between p-4">
+            {/* Navbar */}
+            <header className="bg-white shadow">
+                <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+                    {/* Left */}
                     <Link to="/" className="text-lg font-bold">
                         BarberShop
                     </Link>
 
-                    <nav className="flex items-center gap-4 text-sm">
-                        <Link to="/">Services</Link>
-
-                        {auth.isAuthenticated && (
-                            <>
-                                <Link to="/appointments/book">Book</Link>
-                                <Link to="/appointments/me">My Appointments</Link>
-                            </>
-                        )}
-
-                        {!auth.isAuthenticated ? (
-                            <>
-                                <Link to="/login">Login</Link>
-                                <Link to="/register">Register</Link>
-                            </>
-                        ) : (
+                    {/* Right */}
+                    <nav className="flex items-center gap-3">
+                        {auth.isAuthenticated ? (
                             <button
+                                type="button"
                                 onClick={handleLogout}
-                                className="font-medium text-red-600 hover:underline"
+                                className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:opacity-90"
                             >
                                 Logout
                             </button>
+                        ) : (
+                            <>
+                                <Link
+                                    to="/login"
+                                    className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+                                >
+                                    Login
+                                </Link>
+                                <Link
+                                    to="/register"
+                                    className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-100"
+                                >
+                                    Register
+                                </Link>
+                            </>
                         )}
                     </nav>
                 </div>
             </header>
 
-            <main className="mx-auto max-w-5xl p-4">
+            <main className="mx-auto max-w-6xl px-4 py-6">
                 <Outlet />
             </main>
         </div>
     );
 }
+
 
