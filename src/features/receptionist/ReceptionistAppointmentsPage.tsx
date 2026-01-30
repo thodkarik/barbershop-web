@@ -107,9 +107,6 @@ const ReceptionistAppointmentsPage = () => {
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                                 <div>
                                     <p className="text-sm text-gray-600">Date & time</p>
-                                    <p className="font-medium">
-                                        {formatDate(a.start)} — {formatTime(a.start)} to {formatTime(a.end)}
-                                    </p>
                                     <div className="flex items-center gap-3">
                                         <p className="font-medium">
                                             {formatDate(a.start)} — {formatTime(a.start)} to {formatTime(a.end)}
