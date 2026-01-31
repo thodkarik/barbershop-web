@@ -1,5 +1,5 @@
 import {NavLink, Outlet, useNavigate} from "react-router-dom";
-import { useAuth } from "../../features/auth/AuthContext";
+import { useAuth } from "../../features/auth/useAuth";
 import { getRoleFromToken } from "../utils/jwt.ts";
 
 export default function Layout() {
