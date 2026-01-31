@@ -64,6 +64,11 @@ export default function Layout() {
                                     Manage Services
                                 </NavLink>
                             )}
+                            {auth.isAuthenticated && role === "Admin" && (
+                                <NavLink to="/admin/staff" className={navLinkClass}>
+                                    Staff Directory
+                                </NavLink>
+                            )}
                         </div>
 
                         {/* Divider */}

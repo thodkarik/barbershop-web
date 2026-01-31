@@ -10,6 +10,7 @@ import BarberAppointmentsPage from "./features/appointments/BarberAppointmentsPa
 import ReceptionistAppointmentsPage from "./features/receptionist/ReceptionistAppointmentsPage.tsx";
 import AdminServicesPage from "./features/services/AdminServicesPage.tsx";
 import RoleRoute from "./features/auth/RoleRoute.tsx";
+import AdminStaffPage from "./features/admin/AdminStaffPage.tsx";
 
 function App() {
     return (
@@ -50,11 +51,9 @@ function App() {
                             </Route>
 
                             {/* Admin */}
-                            <Route
-                                path="admin"
-                                element={<RoleRoute allowed={["Admin"]} />}
-                            >
+                            <Route path="admin" element={<RoleRoute allowed={["Admin"]} />}>
                                 <Route path="services" element={<AdminServicesPage />} />
+                                <Route path="staff" element={<AdminStaffPage />} />
                             </Route>
 
                         </Route>

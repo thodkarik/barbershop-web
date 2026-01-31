@@ -110,10 +110,6 @@ const AdminServicesPage = () => {
                         <h1 className="text-2xl font-bold">Admin · Services</h1>
                         <p className="mt-1 text-sm text-gray-600">Create, edit or delete services.</p>
                     </div>
-
-                    <Button type="button" variant="ghost" onClick={startCreate}>
-                        New
-                    </Button>
                 </div>
 
                 {error && (
