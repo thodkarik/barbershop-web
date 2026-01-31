@@ -1,12 +1,11 @@
 import {NavLink, Outlet, useNavigate} from "react-router-dom";
 import { useAuth } from "../../features/auth/useAuth";
-import { getRoleFromToken } from "../utils/jwt.ts";
 
 export default function Layout() {
     const auth = useAuth();
     const navigate = useNavigate();
 
-    const role = auth.token ? getRoleFromToken(auth.token) : null;
+    const role = auth.role;
 
     const handleLogout = () => {
         auth.logout();

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { AuthContextValue } from "./authTypes";
 import { AuthContext } from "./AuthContext";
 import { clearToken, getToken, setToken } from "../../shared/utils/tokenStorage";
-import { isTokenExpired } from "../../shared/utils/jwt";
+import { isTokenExpired, getRoleFromToken } from "../../shared/utils/jwt";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [token, setTokenState] = useState<string | null>(() => {
@@ -17,6 +17,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return storedToken;
     });
 
+    const role = token ? getRoleFromToken(token) : null;
     const isAuthenticated = !!token;
 
     const logout = () => {
@@ -47,6 +48,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const value = useMemo<AuthContextValue>(() => {
         return {
             token,
+            role,
             isAuthenticated,
             login: (newToken: string) => {
                 setToken(newToken);
@@ -54,7 +56,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             },
             logout,
         };
-    }, [token, isAuthenticated]);
+    }, [token, role, isAuthenticated]);
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return (
+        <AuthContext.Provider value={value}>
+            {children}
+        </AuthContext.Provider>
+    );
 }
+

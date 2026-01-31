@@ -1,8 +1,4 @@
-type JwtPayload = {
-    exp?: number;
-    role?: string;
-    [key: string]: unknown;
-};
+type JwtPayload = Record<string, unknown>;
 
 const parseJwtPayload = (token: string): JwtPayload | null => {
     try {
@@ -25,13 +21,37 @@ const parseJwtPayload = (token: string): JwtPayload | null => {
 
 export const getRoleFromToken = (token: string): string | null => {
     const payload = parseJwtPayload(token);
-    const role = payload?.role;
-    return typeof role === "string" ? role : null;
+    if (!payload) return null;
+
+    const candidates = [
+        "role",
+        "roles",
+        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+    ];
+
+    for (const key of candidates) {
+        const value = payload[key];
+
+        if (typeof value === "string") return value;
+
+        if (Array.isArray(value) && typeof value[0] === "string") return value[0];
+    }
+
+    for (const [k, v] of Object.entries(payload)) {
+        if (k.toLowerCase().endsWith("/role")) {
+            if (typeof v === "string") return v;
+            if (Array.isArray(v) && typeof v[0] === "string") return v[0];
+        }
+    }
+
+    return null;
 };
 
 export const isTokenExpired = (token: string): boolean => {
     const payload = parseJwtPayload(token);
-    const exp = payload?.exp;
+    if (!payload) return true;
+
+    const exp = payload["exp"];
 
     if (typeof exp !== "number") return true;
 

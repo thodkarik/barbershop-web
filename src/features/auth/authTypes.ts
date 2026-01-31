@@ -1,9 +1,8 @@
-export type AuthState = {
+export type AuthContextValue = {
     token: string | null;
     isAuthenticated: boolean;
-};
-
-export type AuthContextValue = AuthState & {
+    role: string | null;
     login: (token: string) => void;
     logout: () => void;
 };
+
